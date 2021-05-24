@@ -1,3 +1,5 @@
 import gha
 
-gha  # pylint: disable=pointless-statement
+
+def test_reference():
+    gha  # pylint: disable=pointless-statement
