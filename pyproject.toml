@@ -1,5 +1,5 @@
 [tool.poetry]
-name = "gha-test-py"
+name = "gha"
 version = "0.1.0"
 description = ""
 authors = ["Ryuichi OHORI"]
