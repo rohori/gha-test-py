@@ -1,3 +1,3 @@
 import gha
 
-gha
+gha  # pylint: disable=pointless-statement
