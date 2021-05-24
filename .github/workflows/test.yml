@@ -1,0 +1,22 @@
+name: test
+on: [push]
+jobs:
+  test:
+    name: test
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: [3.7, 3.8, 3.9, 3.10]
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-python@v2
+        with:
+          python-version: ${{ matrix.python-version }}
+      - run: |
+          curl -sSL https://raw.githubusercontent.com/python-poetry/poetry/master/get-poetry.py | python
+      - run: echo "$HOME/.poetry/bin" >> $GITHUB_PATH
+      - run: poetry install --no-interaction
+      - run: poetry run black --check src tests
+      - run: poetry run pylint --disable C src tests
+      - run: poetry run mypy src tests
+      - run: poetry run coverage run -m pytest
