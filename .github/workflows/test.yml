@@ -7,7 +7,7 @@ jobs:
       - uses: actions/setup-python@v2
       - run: |
           curl -sSL https://raw.githubusercontent.com/python-poetry/poetry/master/install-poetry.py | python
-      - run: echo "$HOME/.poetry/bin" >> $GITHUB_PATH
+      - run: echo "$HOME/.local/bin" >> $GITHUB_PATH
       - run: poetry install --no-interaction
       - run: poetry run black --check src tests
       - run: poetry run pylint --disable C src tests
@@ -25,6 +25,6 @@ jobs:
           python-version: ${{ matrix.python-version }}
       - run: |
           curl -sSL https://raw.githubusercontent.com/python-poetry/poetry/master/install-poetry.py | python
-      - run: echo "$HOME/.poetry/bin" >> $GITHUB_PATH
+      - run: echo "$HOME/.local/bin" >> $GITHUB_PATH
       - run: poetry install --no-interaction
       - run: poetry run coverage run -m pytest
