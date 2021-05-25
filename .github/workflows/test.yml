@@ -15,7 +15,11 @@ jobs:
   test:
     strategy:
       matrix:
-        python-version: ["3.7", "3.8", "3.9", "3.10.0-beta.1"]
+        python-version:
+          - "3.7"
+          - "3.8"
+          - "3.9"
+          #- "3.10.0-beta.1"
         os: [ubuntu-latest, windows-latest, macos-latest]
     runs-on: ${{ matrix.os }}
     steps:
@@ -29,5 +33,5 @@ jobs:
         run: echo "$Env:APPDATA/Python/Scripts" >> $Env:GITHUB_PATH
       - if: ${{ matrix.os == 'ubuntu-latest' || matrix.os == 'macos-latest'}}
         run: echo "$HOME/.local/bin" >> $GITHUB_PATH
-      - run: poetry install --no-interaction
+      - run: poetry install -vvv --no-interaction
       - run: poetry run coverage run -m pytest
