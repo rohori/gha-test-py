@@ -1,17 +1,47 @@
 on: [push]
 jobs:
-  static:
+  black:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
       - uses: actions/setup-python@v2
-      - run: |
+        with:
+          python-version: "3.9"
+      - name: install dependencies
+        run: |
           curl -sSL https://raw.githubusercontent.com/python-poetry/poetry/master/install-poetry.py | python
-      - run: echo "$HOME/.local/bin" >> $GITHUB_PATH
-      - run: poetry install --no-interaction
-      - run: poetry run black --check src tests
-      - run: poetry run pylint --disable C src tests
-      - run: poetry run mypy src tests
+          echo "$HOME/.local/bin" >> $GITHUB_PATH
+          poetry install --no-interaction
+      - name: black
+        run: poetry run black --check src tests
+  pylint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-python@v2
+        with:
+          python-version: "3.9"
+      - name: install dependencies
+        run: |
+          curl -sSL https://raw.githubusercontent.com/python-poetry/poetry/master/install-poetry.py | python
+          echo "$HOME/.local/bin" >> $GITHUB_PATH
+          poetry install --no-interaction
+      - name: pylint
+        run: poetry run pylint --disable C src tests
+  mypy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-python@v2
+        with:
+          python-version: "3.9"
+      - name: install dependencies
+        run: |
+          curl -sSL https://raw.githubusercontent.com/python-poetry/poetry/master/install-poetry.py | python
+          echo "$HOME/.local/bin" >> $GITHUB_PATH
+          poetry install --no-interaction
+      - name: mypy
+        run: poetry run mypy src tests
   test:
     strategy:
       fail-fast: false
@@ -36,3 +66,10 @@ jobs:
         run: echo "$HOME/.local/bin" >> $GITHUB_PATH
       - run: poetry install -vvv --no-interaction
       - run: poetry run coverage run -m pytest
+      - run: |
+        poetry run coverage report
+        poetry run coverage html
+      - uses: actions/upload-artifact@v2
+        with:
+          name: coverage
+          path: src/htmlcov
